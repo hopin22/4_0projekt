@@ -9,31 +9,34 @@ class Main {
 
             // Wprowadzanie studentów za pomocą skanera
             while (true) {
-                // Menu opcji
-                System.out.println("\n1. Add a new student");
-                System.out.println("2. Display all students");
-                System.out.println("3. Exit");
+                System.out.println("\n1. Dodaj nowego studenta");
+                System.out.println("2. Wyswietl wszystkich studentow");
+                System.out.println("0. Wyjsc");
 
-                System.out.print("Choose an option: ");
+                System.out.print("Wybierz opcje: ");
                 int choice = scanner.nextInt();
-                scanner.nextLine(); // Oczyszczanie bufora po wprowadzeniu liczby
+                scanner.nextLine(); // To clear the buffer
 
                 switch (choice) {
                     case 1:
                         // Dodawanie nowego studenta
-                        System.out.print("Enter student's name: ");
+                        System.out.print("Imie: ");
                         String name = scanner.nextLine();
-                        System.out.print("Enter student's age: ");
+
+                        System.out.print("Wiek(podaj w liczbie calkowitej): ");
                         int age = scanner.nextInt();
-                        scanner.nextLine();  // Oczyszczanie bufora po wprowadzeniu liczby
-                        System.out.print("Enter student's email: ");
+                        scanner.nextLine();  // Clears buffer after age input
+
+                        // Zbieranie dodatkowych danych
+                        System.out.print(" email: ");
                         String email = scanner.nextLine();
-                        System.out.print("Enter student's phone number: ");
+
+                        System.out.print("numer telefonu: ");
                         String phoneNumber = scanner.nextLine();
 
-                        // Dodanie studenta do listy
+                        // Dodajemy nowego studenta do bazy
                         s.addStudent(new Student(name, age, email, phoneNumber));
-                        System.out.println("Student added!");
+                        System.out.println("Student dodany!");
                         break;
 
                     case 2:
@@ -44,15 +47,17 @@ class Main {
                         } else {
                             System.out.println("\nList of students:");
                             for (Student current : students) {
-                                System.out.println(current.toString());  // Wyświetlanie wszystkich danych studenta
+                                if (current != null) {  // Sprawdzamy, czy student nie jest null
+                                    System.out.println(current.toString());
+                                }
                             }
                         }
                         break;
 
-                    case 3:
+                    case 0:
                         // Zakończenie programu
                         System.out.println("Exiting...");
-                        return;  // Kończy program
+                        return;
 
                     default:
                         System.out.println("Invalid choice. Please select a valid option.");

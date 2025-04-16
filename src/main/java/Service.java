@@ -5,39 +5,50 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.File;
 
 public class Service {
 
   // Dodawanie studenta do pliku
   public void addStudent(Student student) throws IOException {
-    var f = new FileWriter("db.txt", true);  // Otwieramy plik do dopisywania
-    var b = new BufferedWriter(f);  // Bufor do zapisu
-    b.append(student.toString());  // Poprawione wywołanie metody toString()
-    b.newLine();  // Nowa linia po każdym studencie
-    b.close();  // Zamykamy bufor
+    // Sprawdzamy, czy dane studenta są poprawne
+    if (student.getName() == null || student.getName().isEmpty() ||
+        student.getAge() <= 0 || student.getEmail() == null || student.getPhoneNumber() == null) {
+      throw new IllegalArgumentException("Student data is invalid.");
+    }
+
+    // Użycie try-with-resources zapewnia automatyczne zamknięcie strumieni
+    try (BufferedWriter b = new BufferedWriter(new FileWriter("db.txt", true))) {
+      b.append(student.toString());  // Poprawione wywołanie metody toString()
+      b.newLine();  // Nowa linia po każdym studencie
+    }
   }
 
   // Pobieranie studentów z pliku
   public Collection<Student> getStudents() throws IOException {
     var ret = new ArrayList<Student>();  // Kolekcja do przechowywania studentów
-    var f = new FileReader("db.txt");  // Otwieramy plik do odczytu
-    var reader = new BufferedReader(f);  // Bufor do odczytu
-    String line = "";
 
-    while (true) {
-      line = reader.readLine();  // Czytamy linię
-      if (line == null)  // Jeśli koniec pliku, przerywamy
-        break;
-
-      ret.add(Student.parse(line));  // Używamy metody parse (mała litera 'p')
+    // Użycie try-with-resources zapewnia automatyczne zamknięcie strumieni
+    try (BufferedReader reader = new BufferedReader(new FileReader("db.txt"))) {
+      String line;
+      while ((line = reader.readLine()) != null) {
+        // Jeśli linia nie jest pusta, próbujemy ją sparsować
+        if (!line.trim().isEmpty()) {
+          ret.add(Student.parse(line.trim()));  // Używamy metody parse (mała litera 'p')
+        }
+      }
     }
-
-    reader.close();  // Zamykamy czytnik
     return ret;  // Zwracamy listę studentów
   }
 
   // Metoda do znalezienia studenta po imieniu (możesz ją rozbudować)
-  public Student findStudentByName(String name) {
-    return null;  // Na razie nie implementujemy tej funkcji
+  public Student findStudentByName(String name) throws IOException {
+    var students = getStudents();
+    for (Student student : students) {
+      if (student.getName().equalsIgnoreCase(name)) {
+        return student;
+      }
+    }
+    return null;  // Jeśli nie znaleziono, zwróć null
   }
 }

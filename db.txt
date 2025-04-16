@@ -1,5 +1,1 @@
-arek 10
-kuba 10
-arek 10
-arek 20
-Name: arek, Age: 10, Email: emial, Phone: 23445
+arek,20,gijeugn,74293

@@ -1,50 +1,63 @@
 public class Student {
 
-  private String name;
-  private int age;
-  private String email;
-  private String phoneNumber;
+    private String name;
+    private int age;
+    private String email;
+    private String phoneNumber;
 
-  // Zmieniony konstruktor, aby przyjmował nowe dane
-  public Student(String name, int age, String email, String phoneNumber) {
-    this.name = name;
-    this.age = age;
-    this.email = email;
-    this.phoneNumber = phoneNumber;
-  }
-
-  // Getter dla imienia
-  public String getName() {
-    return name;
-  }
-
-  // Getter dla wieku
-  public int getAge() {
-    return age;
-  }
-
-  // Getter dla e-maila
-  public String getEmail() {
-    return email;
-  }
-
-  // Getter dla numeru telefonu
-  public String getPhoneNumber() {
-    return phoneNumber;
-  }
-
-  // Poprawiona metoda toString, aby wyświetlała wszystkie dane
-  @Override
-  public String toString() {
-    return "Name: " + name + ", Age: " + age + ", Email: " + email + ", Phone: " + phoneNumber;
-  }
-
-  // Parser dla tworzenia obiektu Student z tekstu
-  public static Student parse(String str) {
-    String[] data = str.split(",");
-    if (data.length != 4) {
-      return new Student("Parse Error", -1, "Invalid email", "Invalid phone");
+    // Konstruktor z dwoma parametrami
+    public Student(String name, int age) {
+        this.name = name;
+        this.age = age;
     }
-    return new Student(data[0].trim(), Integer.parseInt(data[1].trim()), data[2].trim(), data[3].trim());
-  }
+
+    // Konstruktor z czterema parametrami (name, age, email, phoneNumber)
+    public Student(String name, int age, String email, String phoneNumber) {
+        this.name = name;
+        this.age = age;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+    }
+
+    // Gettery
+    public String getName() {
+        return name;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    // Metoda toString, która zwraca dane studenta w odpowiednim formacie (z przecinkami)
+    @Override
+    public String toString() {
+        return name + "," + age + "," + email + "," + phoneNumber;
+    }
+
+    // Parse metoda do konwersji z tekstu na obiekt Student
+    public static Student parse(String str) {
+        // Usuwamy niepotrzebne fragmenty tekstu, np. "Age: "
+        str = str.replaceAll("Age: ", "").trim();
+
+        String[] data = str.split(",");
+        if (data.length != 4) {
+            return null;  // Zwracamy null, jeśli dane są niekompletne
+        }
+
+        try {
+            int age = Integer.parseInt(data[1].trim());
+            return new Student(data[0], age, data[2], data[3]);
+        } catch (NumberFormatException e) {
+            // Jeśli parsowanie liczby się nie uda, zwracamy null
+            return null;
+        }
+    }
 }

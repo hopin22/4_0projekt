@@ -1,4 +1,5 @@
 Krzysztof 20
 Janusz 40
-Krzysztof 20
-Janusz 40
+arek 20
+Dawid 20
+kuba dawid 23

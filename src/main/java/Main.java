@@ -8,20 +8,40 @@ Kod bazowy programu Commit4_0:
 */
 
 import java.io.IOException;
+import java.util.Scanner;
 
 class Main {
-  public static void main(String[] args) {
-    try {
-      Service s = new Service();
-      s.addStudent(new Student("Krzysztof", 20));
-      s.addStudent(new Student("Janusz", 40));
+    public static void main(String[] args) {
+        try {
+            Service s = new Service();
+            Scanner scanner = new Scanner(System.in);
 
-      var students = s.getStudents();
-      for(Student current : students) {
-        System.out.println(current.ToString());
-      }
-    } catch (IOException e) {
+            // Wprowadzanie studentów za pomocą skanera
+            while (true) {
+                System.out.print("Enter student's name (or type 'exit' to stop): ");
+                String name = scanner.nextLine();
 
+                // Jeśli użytkownik wpisze "exit", zakończ program
+                if (name.equalsIgnoreCase("exit")) {
+                    break;
+                }
+
+                System.out.print("Enter student's age: ");
+                int age = scanner.nextInt();
+                scanner.nextLine();  // Czyści bufor po wprowadzeniu liczby
+
+                // Dodajemy nowego studenta do listy
+                s.addStudent(new Student(name, age));
+            }
+
+            // Wyświetlanie studentów
+            var students = s.getStudents();
+            for (Student current : students) {
+                System.out.println(current.ToString());
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
-  }
 }

@@ -1,12 +1,3 @@
-/*
-Kod bazowy programu Commit4_0: 
-• Program dodaje do prostej bazy danych (pliku db.txt) dane odnośnie Studentów.
-• Studenci dodawani są w klasie Main.
-• Wszyscy studenci są wypisywani na końcu klasy Main.
-• Klasa Service obsługuje odczyt i zapis do pliku bazy danych.
-• Klasa Student reprezentuje pojedynczego studenta (Imię, Wiek).
-*/
-
 import java.io.IOException;
 import java.util.Scanner;
 
@@ -18,26 +9,50 @@ class Main {
 
             // Wprowadzanie studentów za pomocą skanera
             while (true) {
-                System.out.print("Enter student's name (or type 'exit' to stop): ");
-                String name = scanner.nextLine();
+                // Menu opcji
+                System.out.println("\n1. Add a new student");
+                System.out.println("2. Display all students");
+                System.out.println("3. Exit");
 
-                // Jeśli użytkownik wpisze "exit", zakończ program
-                if (name.equalsIgnoreCase("exit")) {
-                    break;
+                System.out.print("Choose an option: ");
+                int choice = scanner.nextInt();
+                scanner.nextLine(); // Oczyszczanie bufora po wprowadzeniu liczby
+
+                switch (choice) {
+                    case 1:
+                        // Dodawanie nowego studenta
+                        System.out.print("Enter student's name: ");
+                        String name = scanner.nextLine();
+                        System.out.print("Enter student's age: ");
+                        int age = scanner.nextInt();
+                        scanner.nextLine();  // Oczyszczanie bufora po wprowadzeniu liczby
+
+                        // Dodanie studenta do listy
+                        s.addStudent(new Student(name, age));
+                        System.out.println("Student added!");
+                        break;
+
+                    case 2:
+                        // Wyświetlanie wszystkich studentów
+                        var students = s.getStudents();
+                        if (students.isEmpty()) {
+                            System.out.println("No students found.");
+                        } else {
+                            System.out.println("\nList of students:");
+                            for (Student current : students) {
+                                System.out.println(current.toString());  // Wyświetlanie imienia i wieku
+                            }
+                        }
+                        break;
+
+                    case 3:
+                        // Zakończenie programu
+                        System.out.println("Exiting...");
+                        return;  // Kończy program
+
+                    default:
+                        System.out.println("Invalid choice. Please select a valid option.");
                 }
-
-                System.out.print("Enter student's age: ");
-                int age = scanner.nextInt();
-                scanner.nextLine();  // Czyści bufor po wprowadzeniu liczby
-
-                // Dodajemy nowego studenta do listy
-                s.addStudent(new Student(name, age));
-            }
-
-            // Wyświetlanie studentów
-            var students = s.getStudents();
-            for (Student current : students) {
-                System.out.println(current.ToString());
             }
 
         } catch (IOException e) {

@@ -1,24 +1,37 @@
 public class Student {
 
-  private String Name;
-  private int Age;
+    private String name;
+    private int age;
 
-  public Student(String name, int age) {
-    Name = name;
-    Age = age;
-  }
+    // Konstruktor
+    public Student(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
 
-  public String GetName() {return Name;}
-  public int GetAge() {return Age;}
+    // Getter dla imienia
+    public String getName() {
+        return name;
+    }
 
-  public String ToString() {
-    return Name + " " + Integer.toString(Age);
-  }
+    // Getter dla wieku
+    public int getAge() {
+        return age;
+    }
 
-  public static Student Parse(String str) {
-    String[] data = str.split(" ");
-    if(data.length != 2) 
-      return new Student("Parse Error", -1);
-    return new Student(data[0], Integer.parseInt(data[1]));
-  }
+    // Nadpisana metoda toString()
+    @Override
+    public String toString() {
+        return name + " " + age;
+    }
+
+    // Metoda parse - zamiana Stringa na obiekt Student
+    public static Student parse(String str) {
+        String[] data = str.split(" ");
+        if (data.length != 2) {
+            return new Student("Parse Error", -1);
+        }
+        return new Student(data[0], Integer.parseInt(data[1]));
+    }
 }
+

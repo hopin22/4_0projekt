@@ -26,9 +26,13 @@ class Main {
                         System.out.print("Enter student's age: ");
                         int age = scanner.nextInt();
                         scanner.nextLine();  // Oczyszczanie bufora po wprowadzeniu liczby
+                        System.out.print("Enter student's email: ");
+                        String email = scanner.nextLine();
+                        System.out.print("Enter student's phone number: ");
+                        String phoneNumber = scanner.nextLine();
 
                         // Dodanie studenta do listy
-                        s.addStudent(new Student(name, age));
+                        s.addStudent(new Student(name, age, email, phoneNumber));
                         System.out.println("Student added!");
                         break;
 
@@ -40,7 +44,7 @@ class Main {
                         } else {
                             System.out.println("\nList of students:");
                             for (Student current : students) {
-                                System.out.println(current.toString());  // Wyświetlanie imienia i wieku
+                                System.out.println(current.toString());  // Wyświetlanie wszystkich danych studenta
                             }
                         }
                         break;

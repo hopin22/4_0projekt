@@ -1,4 +1,5 @@
-arek,20,emial,20,2004-01-02
-arek,20,hopim@.o2.pl,123123123,2000-01-01
-0,12,oz@gmail.com,12312333,2004-04-12
-0,120,halina@wp.pl,20492421,2004-01-09
+
+arek,kuba,23,arek@gmmail.com,123123123,2004-01-22
+arek,sen,23,gmail@wp.pl,123123123,2003-01-01
+arek,sem,22,arek@gmail.com,123123123,2004-03-01
+arek,sen,12,gamil@gmail.com,123123123,2004-06-01

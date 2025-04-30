@@ -1,5 +1,6 @@
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Scanner;
 import java.time.DateTimeException;
 import java.time.LocalDate;
@@ -15,149 +16,166 @@ class Main {
             while (true) {
                 System.out.println("\n1. Dodaj nowego studenta");
                 System.out.println("2. Wyświetl wszystkich studentów");
+                System.out.println("3. Usuń studenta");
                 System.out.println("4. Wyszukaj studenta");
                 System.out.println("0. Wyjście");
 
                 System.out.print("Wybierz opcję: ");
                 int choice = scanner.nextInt();
-                scanner.nextLine(); 
+                scanner.nextLine(); // czyścimy bufor
 
                 switch (choice) {
                     case 1:
-             
+                        // ... (walidacja pól jak wcześniej)
                         String name;
                         while (true) {
                             System.out.print("Imię: ");
                             name = scanner.nextLine().trim();
-                            if (name.isEmpty()) {
-                                System.out.println("Imię nie może być puste!");
-                            } else {
-                                break;
-                            }
+                            if (name.isEmpty()) System.out.println("Imię nie może być puste!");
+                            else break;
                         }
-
+                        String surname;
+                        while (true) {
+                            System.out.print("Nazwisko: ");
+                            surname = scanner.nextLine().trim();
+                            if (surname.isEmpty()) System.out.println("Nazwisko nie może być puste!");
+                            else break;
+                        }
                         int age;
                         while (true) {
-                            System.out.print("Wiek (liczba całkowita): ");
-                            String ageInput = scanner.nextLine().trim();
+                            System.out.print("Wiek (1-150): ");
+                            String input = scanner.nextLine().trim();
                             try {
-                                age = Integer.parseInt(ageInput);
-                                if (age <= 0 || age > 150) {
-                                    System.out.println("Wiek musi być liczbą z zakresu 1-150!");
-                                } else {
-                                    break;
-                                }
+                                age = Integer.parseInt(input);
+                                if (age < 1 || age > 150) System.out.println("Wiek musi być z zakresu 1-150!");
+                                else break;
                             } catch (NumberFormatException e) {
                                 System.out.println("Wiek musi być liczbą całkowitą!");
                             }
                         }
-
                         String email;
                         while (true) {
                             System.out.print("Email: ");
                             email = scanner.nextLine().trim();
-                            if (!email.matches("[^@\\s]+@[^@\\s]+\\.[^@\\s]+")) {
-                                System.out.println("Niepoprawny format email!");
-                            } else {
-                                break;
-                            }
+                            if (!email.matches("[^@\\s]+@[^@\\s]+\\.[^@\\s]+")) System.out.println("Niepoprawny format email!");
+                            else break;
                         }
-
                         String phone;
                         while (true) {
                             System.out.print("Numer telefonu: ");
                             phone = scanner.nextLine().trim();
-                            if (!phone.matches("\\+?\\d{7,15}")) {
-                                System.out.println("Numer telefonu musi składać się z 7-15 cyfr, opcjonalnie z prefiksem +!");
-                            } else {
-                                break;
-                            }
+                            if (!phone.matches("\\+?\\d{7,15}")) System.out.println("Numer telefonu musi mieć 7-15 cyfr, opcjonalnie +!");
+                            else break;
                         }
-
                         LocalDate dob;
                         while (true) {
-                            System.out.print("Data urodzenia (format yyyy-MM-dd): ");
+                            System.out.print("Data urodzenia (yyyy-MM-dd): ");
                             String dobStr = scanner.nextLine().trim();
                             String[] parts = dobStr.split("-");
-                            if (parts.length != 3) {
-                                System.out.println("Niepoprawny format! Użyj yyyy-MM-dd.");
-                                continue;
-                            }
+                            if (parts.length != 3) { System.out.println("Niepoprawny format! Użyj yyyy-MM-dd."); continue; }
                             try {
-                                int year = Integer.parseInt(parts[0]);
-                                int month = Integer.parseInt(parts[1]);
-                                int day = Integer.parseInt(parts[2]);
-
-                                if (year < 1 || year > 3000) {
-                                    System.out.println("Rok musi być w zakresie od 1 do 3000!");
-                                    continue;
+                                int y = Integer.parseInt(parts[0]);
+                                int m = Integer.parseInt(parts[1]);
+                                int d = Integer.parseInt(parts[2]);
+                                if (y < 1 || y > 3000) { System.out.println("Rok 1-3000!"); continue; }
+                                if (m < 1 || m > 12) { System.out.println("Miesiąc 1-12!"); continue; }
+                                int maxD;
+                                switch (m) {
+                                    case 2: boolean leap=(y%400==0)||(y%4==0&&y%100!=0); maxD = leap?29:28; break;
+                                    case 4: case 6: case 9: case 11: maxD = 30; break;
+                                    default: maxD = 31;
                                 }
-                                if (month < 1 || month > 12) {
-                                    System.out.println("Miesiąc musi być w zakresie od 1 do 12!");
-                                    continue;
-                                }
-                                int maxDay;
-                                switch (month) {
-                                    case 2:
-                                        boolean leap = (year % 400 == 0) || (year % 4 == 0 && year % 100 != 0);
-                                        maxDay = leap ? 29 : 28;
-                                        break;
-                                    case 4: case 6: case 9: case 11:
-                                        maxDay = 30;
-                                        break;
-                                    default:
-                                        maxDay = 31;
-                                }
-                                if (day < 1 || day > maxDay) {
-                                    System.out.println("Dla miesiąca " + month + " dzień musi być w zakresie od 1 do " + maxDay + "!");
-                                    continue;
-                                }
-                                dob = LocalDate.of(year, month, day);
+                                if (d<1||d>maxD) { System.out.println("Dzień dla miesiąca "+m+" 1-"+maxD+"!"); continue; }
+                                dob = LocalDate.of(y,m,d);
                                 break;
-                            } catch (NumberFormatException e) {
+                            } catch (NumberFormatException ne) {
                                 System.out.println("Rok, miesiąc i dzień muszą być liczbami!");
-                            } catch (DateTimeException e) {
+                            } catch (DateTimeException de) {
                                 System.out.println("Niepoprawna data! Spróbuj ponownie.");
                             }
                         }
-
-                        s.addStudent(new Student(name, age, email, phone, dob.toString()));
+                        s.addStudent(new Student(name, surname, age, email, phone, dob.toString()));
                         System.out.println("Student dodany!");
                         break;
 
                     case 2:
-                        var students = s.getStudents();
-                        if (students.isEmpty()) {
-                            System.out.println("Brak studentów w bazie.");
-                        } else {
+                        List<Student> all = s.getStudents();
+                        if (all.isEmpty()) System.out.println("Brak studentów.");
+                        else {
                             System.out.println("\nLista studentów:");
-                            for (Student st : students) {
-                                System.out.println(st);
+                            for (Student st : all) System.out.println(st);
+                        }
+                        break;
+
+                    case 3:
+                        // Usuń studenta
+                        String dName;
+                        while (true) {
+                            System.out.print("Imię studenta do usunięcia: ");
+                            dName = scanner.nextLine().trim();
+                            if (dName.isEmpty()) System.out.println("Imię nie może być puste!");
+                            else break;
+                        }
+                        String dSurname;
+                        while (true) {
+                            System.out.print("Nazwisko studenta do usunięcia: ");
+                            dSurname = scanner.nextLine().trim();
+                            if (dSurname.isEmpty()) System.out.println("Nazwisko nie może być puste!");
+                            else break;
+                        }
+                        List<Student> matches = s.findStudentsByFullName(dName, dSurname);
+                        if (matches.isEmpty()) {
+                            System.out.println("Brak studentów o podanym imieniu i nazwisku.");
+                        } else {
+                            System.out.println("Znaleziono następujące konta:");
+                            for (int i = 0; i < matches.size(); i++) {
+                                System.out.println((i+1) + ". " + matches.get(i));
                             }
+                            int idx;
+                            while (true) {
+                                System.out.print("Wybierz numer do usunięcia: ");
+                                String in = scanner.nextLine().trim();
+                                try {
+                                    idx = Integer.parseInt(in);
+                                    if (idx < 1 || idx > matches.size()) System.out.println("Nieprawidłowy numer!");
+                                    else break;
+                                } catch (NumberFormatException nfe) {
+                                    System.out.println("Podaj numer jako liczbę!");
+                                }
+                            }
+                            boolean removed = s.removeStudent(dName, dSurname, idx-1);
+                            System.out.println(removed ? "Usunięto studenta." : "Błąd usuwania.");
                         }
                         break;
 
                     case 4:
-                        System.out.print("Podaj imię studenta do wyszukania: ");
-                        String searchName = scanner.nextLine().trim();
-                        Student found = s.findStudentByName(searchName);
-                        if (found != null) {
-                            System.out.println("Znaleziono: " + found);
-                        } else {
-                            System.out.println("Nie znaleziono studenta o imieniu '" + searchName + "'.");
+                        // ... (wyszukiwanie jak wcześniej)
+                        String sName;
+                        while (true) {
+                            System.out.print("Imię do wyszukania: ");
+                            sName = scanner.nextLine().trim();
+                            if (sName.isEmpty()) System.out.println("Imię nie może być puste!");
+                            else break;
                         }
+                        String sSurname;
+                        while (true) {
+                            System.out.print("Nazwisko do wyszukania: ");
+                            sSurname = scanner.nextLine().trim();
+                            if (sSurname.isEmpty()) System.out.println("Nazwisko nie może być puste!");
+                            else break;
+                        }
+                        Student found = s.findStudentByFullName(sName, sSurname);
+                        System.out.println(found!=null ? "Znaleziono: " + found : "Nie znaleziono studenta.");
                         break;
 
                     case 0:
-                        System.out.println("Koniec programu.");
-                        return;
-
+                        System.out.println("Koniec programu."); return;
                     default:
-                        System.out.println("Nieprawidłowa opcja. Spróbuj ponownie.");
+                        System.out.println("Nieprawidłowa opcja.");
                 }
             }
-        } catch (IOException ex) {
-            ex.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

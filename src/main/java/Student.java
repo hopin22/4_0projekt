@@ -1,62 +1,56 @@
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+
 public class Student {
 
     private String name;
     private int age;
     private String email;
     private String phoneNumber;
+    private String dateOfBirth;
 
-    // Konstruktor z dwoma parametrami
     public Student(String name, int age) {
         this.name = name;
         this.age = age;
     }
 
-    // Konstruktor z czterema parametrami (name, age, email, phoneNumber)
-    public Student(String name, int age, String email, String phoneNumber) {
+    public Student(String name, int age, String email, String phoneNumber, String dateOfBirth) {
         this.name = name;
         this.age = age;
         this.email = email;
         this.phoneNumber = phoneNumber;
+        this.dateOfBirth = dateOfBirth;
     }
 
-    // Gettery
-    public String getName() {
-        return name;
-    }
+    public String getName() { return name; }
+    public int getAge() { return age; }
+    public String getEmail() { return email; }
+    public String getPhoneNumber() { return phoneNumber; }
+    public String getDateOfBirth() { return dateOfBirth; }
 
-    public int getAge() {
-        return age;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    // Metoda toString, która zwraca dane studenta w odpowiednim formacie (z przecinkami)
     @Override
     public String toString() {
-        return name + "," + age + "," + email + "," + phoneNumber;
+        return name + "," + age + "," + email + "," + phoneNumber + "," + dateOfBirth;
     }
 
-    // Parse metoda do konwersji z tekstu na obiekt Student
-    public static Student parse(String str) {
-        // Usuwamy niepotrzebne fragmenty tekstu, np. "Age: "
-        str = str.replaceAll("Age: ", "").trim();
-
-        String[] data = str.split(",");
-        if (data.length != 4) {
-            return null;  // Zwracamy null, jeśli dane są niekompletne
-        }
-
+    public static Student parse(String line) {
+        String[] parts = line.split(",");
+        if (parts.length != 5) return null;
         try {
-            int age = Integer.parseInt(data[1].trim());
-            return new Student(data[0], age, data[2], data[3]);
-        } catch (NumberFormatException e) {
-            // Jeśli parsowanie liczby się nie uda, zwracamy null
+            String name = parts[0].trim();
+            int age = Integer.parseInt(parts[1].trim());
+            String email = parts[2].trim();
+            String phone = parts[3].trim();
+            String dob = parts[4].trim();
+
+            DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDate date = LocalDate.parse(dob, fmt);
+            int year = date.getYear();
+            if (year < 1 || year > 3000) return null;
+
+            return new Student(name, age, email, phone, dob);
+        } catch (DateTimeParseException | NumberFormatException e) {
             return null;
         }
     }

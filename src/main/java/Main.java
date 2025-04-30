@@ -1,71 +1,154 @@
+
 import java.io.IOException;
 import java.util.Scanner;
+import java.time.DateTimeException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 class Main {
     public static void main(String[] args) {
         try {
             Service s = new Service();
             Scanner scanner = new Scanner(System.in);
+            DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-            // Wprowadzanie studentów za pomocą skanera
             while (true) {
                 System.out.println("\n1. Dodaj nowego studenta");
-                System.out.println("2. Wyswietl wszystkich studentow");
-                System.out.println("0. Wyjsc");
+                System.out.println("2. Wyświetl wszystkich studentów");
+                System.out.println("0. Wyjście");
 
-                System.out.print("Wybierz opcje: ");
+                System.out.print("Wybierz opcję: ");
                 int choice = scanner.nextInt();
-                scanner.nextLine(); // To clear the buffer
+                scanner.nextLine(); 
 
                 switch (choice) {
                     case 1:
-                        // Dodawanie nowego studenta
-                        System.out.print("Imie: ");
-                        String name = scanner.nextLine();
+               
+                        String name;
+                        while (true) {
+                            System.out.print("Imię: ");
+                            name = scanner.nextLine().trim();
+                            if (name.isEmpty()) {
+                                System.out.println("Imię nie może być puste!");
+                            } else {
+                                break;
+                            }
+                        }
 
-                        System.out.print("Wiek(podaj w liczbie calkowitej): ");
-                        int age = scanner.nextInt();
-                        scanner.nextLine();  // Clears buffer after age input
+                  
+                        int age;
+                        while (true) {
+                            System.out.print("Wiek (liczba całkowita): ");
+                            String ageInput = scanner.nextLine().trim();
+                            try {
+                                age = Integer.parseInt(ageInput);
+                                if (age <= 0 || age > 150) {
+                                    System.out.println("Wiek musi być liczbą z zakresu 1-150!");
+                                } else {
+                                    break;
+                                }
+                            } catch (NumberFormatException e) {
+                                System.out.println("Wiek musi być liczbą całkowitą!");
+                            }
+                        }
 
-                        // Zbieranie dodatkowych danych
-                        System.out.print(" email: ");
-                        String email = scanner.nextLine();
+               
+                        String email;
+                        while (true) {
+                            System.out.print("Email: ");
+                            email = scanner.nextLine().trim();
+                            if (!email.matches("[^@\\s]+@[^@\\s]+\\.[^@\\s]+")) {
+                                System.out.println("Niepoprawny format email!");
+                            } else {
+                                break;
+                            }
+                        }
 
-                        System.out.print("numer telefonu: ");
-                        String phoneNumber = scanner.nextLine();
+                   
+                        String phone;
+                        while (true) {
+                            System.out.print("Numer telefonu: ");
+                            phone = scanner.nextLine().trim();
+                            if (!phone.matches("\\+?\\d{7,15}")) {
+                                System.out.println("Numer telefonu musi składać się z 7-15 cyfr, opcjonalnie z prefiksem +!");
+                            } else {
+                                break;
+                            }
+                        }
 
-                        // Dodajemy nowego studenta do bazy
-                        s.addStudent(new Student(name, age, email, phoneNumber));
+                        LocalDate dob;
+                        while (true) {
+                            System.out.print("Data urodzenia (format yyyy-MM-dd): ");
+                            String dobStr = scanner.nextLine().trim();
+                            String[] parts = dobStr.split("-");
+                            if (parts.length != 3) {
+                                System.out.println("Niepoprawny format! Użyj yyyy-MM-dd.");
+                                continue;
+                            }
+                            try {
+                                int year = Integer.parseInt(parts[0]);
+                                int month = Integer.parseInt(parts[1]);
+                                int day = Integer.parseInt(parts[2]);
+
+                                if (year < 1 || year > 3000) {
+                                    System.out.println("Rok musi być w zakresie od 1 do 3000!");
+                                    continue;
+                                }
+                                if (month < 1 || month > 12) {
+                                    System.out.println("Miesiąc musi być w zakresie od 1 do 12!");
+                                    continue;
+                                }
+                                int maxDay;
+                                switch (month) {
+                                    case 2:
+                                        boolean leap = (year % 400 == 0) || (year % 4 == 0 && year % 100 != 0);
+                                        maxDay = leap ? 29 : 28;
+                                        break;
+                                    case 4: case 6: case 9: case 11:
+                                        maxDay = 30;
+                                        break;
+                                    default:
+                                        maxDay = 31;
+                                }
+                                if (day < 1 || day > maxDay) {
+                                    System.out.println("Dla miesiąca " + month + " dzień musi być w zakresie od 1 do " + maxDay + "!");
+                                    continue;
+                                }
+                                dob = LocalDate.of(year, month, day);
+                                break;
+                            } catch (NumberFormatException e) {
+                                System.out.println("Rok, miesiąc i dzień muszą być liczbami!");
+                            } catch (DateTimeException e) {
+                                System.out.println("Niepoprawna data! Spróbuj ponownie.");
+                            }
+                        }
+
+                        s.addStudent(new Student(name, age, email, phone, dob.toString()));
                         System.out.println("Student dodany!");
                         break;
 
                     case 2:
-                        // Wyświetlanie wszystkich studentów
                         var students = s.getStudents();
                         if (students.isEmpty()) {
-                            System.out.println("No students found.");
+                            System.out.println("Brak studentów w bazie.");
                         } else {
-                            System.out.println("\nList of students:");
-                            for (Student current : students) {
-                                if (current != null) {  // Sprawdzamy, czy student nie jest null
-                                    System.out.println(current.toString());
-                                }
+                            System.out.println("\nLista studentów:");
+                            for (Student st : students) {
+                                System.out.println(st);
                             }
                         }
                         break;
 
                     case 0:
-                        // Zakończenie programu
-                        System.out.println("Exiting...");
+                        System.out.println("Koniec programu.");
                         return;
 
                     default:
-                        System.out.println("Invalid choice. Please select a valid option.");
+                        System.out.println("Nieprawidłowa opcja. Spróbuj ponownie.");
                 }
             }
-
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
     }
 }

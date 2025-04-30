@@ -1,1 +1,2 @@
-arek,20,gijeugn,74293
+arek,20,emial,20,2004-01-02
+arek,20,hopim@.o2.pl,123123123,2000-01-01

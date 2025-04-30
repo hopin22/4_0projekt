@@ -15,6 +15,7 @@ class Main {
             while (true) {
                 System.out.println("\n1. Dodaj nowego studenta");
                 System.out.println("2. Wyświetl wszystkich studentów");
+                System.out.println("4. Wyszukaj studenta");
                 System.out.println("0. Wyjście");
 
                 System.out.print("Wybierz opcję: ");
@@ -23,7 +24,7 @@ class Main {
 
                 switch (choice) {
                     case 1:
-               
+             
                         String name;
                         while (true) {
                             System.out.print("Imię: ");
@@ -35,7 +36,6 @@ class Main {
                             }
                         }
 
-                  
                         int age;
                         while (true) {
                             System.out.print("Wiek (liczba całkowita): ");
@@ -52,7 +52,6 @@ class Main {
                             }
                         }
 
-               
                         String email;
                         while (true) {
                             System.out.print("Email: ");
@@ -64,7 +63,6 @@ class Main {
                             }
                         }
 
-                   
                         String phone;
                         while (true) {
                             System.out.print("Numer telefonu: ");
@@ -136,6 +134,17 @@ class Main {
                             for (Student st : students) {
                                 System.out.println(st);
                             }
+                        }
+                        break;
+
+                    case 4:
+                        System.out.print("Podaj imię studenta do wyszukania: ");
+                        String searchName = scanner.nextLine().trim();
+                        Student found = s.findStudentByName(searchName);
+                        if (found != null) {
+                            System.out.println("Znaleziono: " + found);
+                        } else {
+                            System.out.println("Nie znaleziono studenta o imieniu '" + searchName + "'.");
                         }
                         break;
 

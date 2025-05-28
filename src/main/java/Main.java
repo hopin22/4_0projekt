@@ -179,3 +179,37 @@ class Main {
         }
     }
 }
+import java.util.Scanner;
+
+public class TablicaLiczb {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // 1. Wczytanie tablicy liczb całkowitych od użytkownika
+        System.out.print("Ile liczb chcesz wprowadzić? ");
+        int n = scanner.nextInt();
+        int[] liczby = new int[n];
+
+        System.out.println("Wprowadź " + n + " liczb całkowitych:");
+        for (int i = 0; i < n; i++) {
+            liczby[i] = scanner.nextInt();
+        }
+
+        // 2. Znalezienie największej i najmniejszej wartości
+        int max = liczby[0];
+        int min = liczby[0];
+
+        for (int i = 1; i < liczby.length; i++) {
+            if (liczby[i] > max) {
+                max = liczby[i];
+            }
+            if (liczby[i] < min) {
+                min = liczby[i];
+            }
+        }
+
+        // 3. Obliczenie i wyświetlenie różnicy
+        int roznica = max - min;
+        System.out.println("Różnica między największą a najmniejszą liczbą wynosi: " + roznica);
+    }
+}
